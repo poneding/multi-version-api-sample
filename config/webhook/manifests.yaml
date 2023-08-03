@@ -1,0 +1,53 @@
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingWebhookConfiguration
+metadata:
+  name: mutating-webhook-configuration
+webhooks:
+- admissionReviewVersions:
+  - v1
+  clientConfig:
+    service:
+      name: webhook-service
+      namespace: system
+      path: /mutate-sampleapis-poneding-com-v2-user
+  failurePolicy: Fail
+  name: muser.dp.io
+  rules:
+  - apiGroups:
+    - sampleapis.poneding.com
+    apiVersions:
+    - v2
+    operations:
+    - CREATE
+    - UPDATE
+    resources:
+    - users
+  sideEffects: None
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingWebhookConfiguration
+metadata:
+  name: validating-webhook-configuration
+webhooks:
+- admissionReviewVersions:
+  - v1
+  clientConfig:
+    service:
+      name: webhook-service
+      namespace: system
+      path: /validate-sampleapis-poneding-com-v2-user
+  failurePolicy: Fail
+  name: vuser.dp.io
+  rules:
+  - apiGroups:
+    - sampleapis.poneding.com
+    apiVersions:
+    - v2
+    operations:
+    - CREATE
+    - UPDATE
+    - DELETE
+    resources:
+    - users
+  sideEffects: None
